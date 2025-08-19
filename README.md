@@ -99,7 +99,6 @@ Pipeline stages:
 | io_req_bits_wmask  | input  | Core/Vector | Cache       | req      | max(VLEN/8, XLEN/8)       | 写操作的 mask                                                      |
 |                    |        |             |             |          |                           |                                                                    |
 | io_req_bits_nAlloc       | input      | Core/Vector | Cache       | req  | 1                                     | 不需要 cache 分配 entry                                                                                                       |
-| ------------------------ | ---------- | ----------- | ----------- | ---- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | io_req_bits_isRefill     | input      | Core/Vector | Cache       | req  | 1                                     | 是否是 refill 请求<br>(for test)                                                                                              |
 | io_req_bits_refillCoh    | input      | Core/Vector | Cache       | req  | cohWidt<br>h                          | refill 指定的 coherence<br>state (for test)                                                                                   |
 |                          |            |             |             |      |                                       |                                                                                                                               |
@@ -114,7 +113,6 @@ Pipeline stages:
 |                          |            |             |             |      |                                       |                                                                                                                               |
 |                          |            | Cache       | Core        | resp | 1                                     |                                                                                                                               |
 | io_nextCycleW<br>b | outpu<br>t |       |       |      |     | 下⼀个周期 cache 要写回 scalar 数据,占<br>⽤ wb 阶段,因此不能处理 s0 阶段的请求 |
-| ------------------ | ---------- | ----- | ----- | ---- | --- | ------------------------------------------------------------------------------- |
 | io_fenceRdy        | Outp<br>ut | Cache | Core  | resp | 1   | cache 中所有请求都已经结束<br>fence 等待完成,可以执⾏后续指令                   |
 |                    |            |       |       |      |     |                                                                                 |
 | io_s0_kill         | Input      | Core  | Cache |      | 1   | 流⽔线控制信号;kill 掉 s0 阶段的操作                                            |

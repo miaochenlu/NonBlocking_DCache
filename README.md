@@ -98,7 +98,6 @@ Pipeline stages:
 | io_req_bits_wdata  | input  | Core/Vector | Cache       | req      | max(VLEN, XLEN)           | 写操作的数据                                                       |
 | io_req_bits_wmask  | input  | Core/Vector | Cache       | req      | max(VLEN/8, XLEN/8)       | 写操作的 mask                                                      |
 |                    |        |             |             |          |                           |                                                                    |
-
 | io_req_bits_nAlloc       | input      | Core/Vector | Cache       | req  | 1                                     | 不需要 cache 分配 entry                                                                                                       |
 | ------------------------ | ---------- | ----------- | ----------- | ---- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | io_req_bits_isRefill     | input      | Core/Vector | Cache       | req  | 1                                     | 是否是 refill 请求<br>(for test)                                                                                              |
@@ -114,7 +113,6 @@ Pipeline stages:
 | io_resp_bits_d<br>ata    | outpu<br>t | Cache       | Core/Vector | resp | max(VLE<br>N, XLEN)                   | load 数据                                                                                                                     |
 |                          |            |             |             |      |                                       |                                                                                                                               |
 |                          |            | Cache       | Core        | resp | 1                                     |                                                                                                                               |
-
 | io_nextCycleW<br>b | outpu<br>t |       |       |      |     | 下⼀个周期 cache 要写回 scalar 数据,占<br>⽤ wb 阶段,因此不能处理 s0 阶段的请求 |
 | ------------------ | ---------- | ----- | ----- | ---- | --- | ------------------------------------------------------------------------------- |
 | io_fenceRdy        | Outp<br>ut | Cache | Core  | resp | 1   | cache 中所有请求都已经结束<br>fence 等待完成,可以执⾏后续指令                   |
@@ -412,8 +410,12 @@ s0 阶段,接收 cache req 请求
 - s1:
   - 获得 tag 结果，数据不存在；判定为没有数据的 cache miss
   - 分配 mshr entry, 开始将 req 写入 mshr entry
-- s2 进入 mshr 状态机: - Refill: 向 L2 请求数据，写入 Refill buffer - Refill 完成: - 合并 store 的数据到 refill 数据 - MSHR 发送 replace req 进入 main pipeline, 请求 replacer 分配 victim way, 读出被替换的数据，如果是 dirty 的则写入 wb queue; 然后将 refill 数据覆盖原来的 victim way
-  整体过程见 load cache miss
+- s2 进入 mshr 状态机:
+  - Refill: 向 L2 请求数据，写入 Refill buffer
+  - Refill 完成: - 合并 store 的数据到 refill 数据
+  - MSHR 发送 replace req 进入 main pipeline, 请求 replacer 分配 victim way, 读出被替换的数据，如果是 dirty 的则写入 wb queue; 然后将 refill 数据覆盖原来的 victim way
+  
+整体过程见 load cache miss
 
 ## 6.3 Atomic
 
